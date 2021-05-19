@@ -7,10 +7,11 @@ using System.Configuration;
 using System.Data.SqlClient;
 using System.Data;
 using System.Web.Services;
+using Memo.Models;
 
 namespace Memo.Controllers
 {
-    //nagawa ko na putangina!!!!!!
+   
     public class HomeController : Controller
     {
         //get dbconnection
@@ -29,22 +30,29 @@ namespace Memo.Controllers
 
 
             }
-                return View();
+                return View(dtbl);
         }
 
-        public ActionResult Create()
+        public ActionResult Create(string Type, string RNo, string To, string Date, string Address, string Store)
         {
-            ViewBag.Message = "Your application description page.";
+            Header h = new Header();
+            Type = h.Type;
+            RNo = h.To;
+            Date = h.Date;
+            Address = h.Address;
+            Store = h.Store;
+            Type = h.Type;
 
-            return View();
+
+            return View(h);
         }
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
+        //public ActionResult Contact()
+        //{
 
-            return View();
-        }
+
+        //   //return RedirectToAction();
+        //}
 
         [WebMethod]
         public JsonResult InsertFields(string h_type, string h_rno, string h_to, string h_date, string h_address, string h_store, string h_text, string h_amount, string h_pesos, string h_reference)
@@ -55,6 +63,7 @@ namespace Memo.Controllers
                 con.Open();
                 string query = @"INSERT INTO HEADER(
                          [H_RNO]
+                        ,[EncodedDate]
                         ,[H_TYPE]
                         ,[H_TO]
                         ,[H_DATE]
@@ -64,10 +73,11 @@ namespace Memo.Controllers
                         ,[H_AMOUNT]
                         ,[H_PESOS]
                         ,[H_REFERENCE]) 
-                    VALUES (@h_type,@h_rno, @h_to,@h_date,@h_address,@h_store,@h_text,@h_amount,@h_pesos,@h_reference)";
+                    VALUES (@h_type,@h_rno,@encdate,@h_to,@h_date,@h_address,@h_store,@h_text,@h_amount,@h_pesos,@h_reference)";
                 SqlCommand cmd = new SqlCommand(query, con);
                 cmd.Parameters.AddWithValue("@h_rno", h_rno);
                 cmd.Parameters.AddWithValue("@h_type", h_type);
+                cmd.Parameters.AddWithValue("@encdate", DateTime.Now);
                 cmd.Parameters.AddWithValue("@h_to", h_to);
                 cmd.Parameters.AddWithValue("@h_date", h_date);
                 cmd.Parameters.AddWithValue("@h_address", h_address);

@@ -1,108 +1,39 @@
-﻿@{
+﻿@model System.Data.DataTable
+@using System.Data;
+
+@{
     ViewBag.Title = "Home Page";
 }
-
-<div class="container">
-    <script src="~/Scripts/CRUD/crud.js"></script>
-    <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
-    <form>
-        <h2>Insert</h2>
-
-
-
-        
-        <div class="form-group">
-            <label for="Type">Type</label>
-            <select class="form-control" id="Type">
-                <option>-Select-</option>
-                <option>Credit</option>
-                <option>Debit</option>
-            </select>
-        </div>
-
-        <div class="form-group">
-
-            <label for="RNo">RNo</label>
-            <input type="text" class="form-control" id="RNo" placeholder="RNo: ">
-        </div>
-        <div class="form-group">
-
-            <label for="To">To</label>
-            <input type="text" class="form-control" id="To" placeholder="To: ">
-        </div>
-
-        <div class="form-group">
-            <label for="Date">Date</label>
-            <input type="date" class="form-control" id="Date">
-        </div>
-        <div class="form-group">
-
-            <label for="Address">Address</label>
-            <input type="text" class="form-control" id="Address" placeholder="Address: ">
-        </div>
-        <div class="form-group">
-
-            <label for="Store">Store</label>
-            <input type="text" class="form-control" id="Store" placeholder="Store: ">
-        </div>
-
-        
-        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#showModal">Submit</button>
-    </form>
-     
-    <div class="panel panel-primary" style="margin:3%">
-        <div class="panel-heading">Preview</div>
-        <div class="panel-body">Some content......</div>
-    </div>
-</div>
+<h2>Home</h2>
 
 
 
 
-<!-- Modal -->
-<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" style="margin:5%">
-                <div class="container-fluid">
-                    <input type="text" id="editor1"/>
-                    <script>
-                        CKEDITOR.replace('editor1');
-                    </script>
-                </div>
-                <div class="container-fluid">
-                    <label for="Amount">Amount</label>
-                    <input type="number" id="Amount" class="form-control" oninput="convert()" />
+<table class="table table-responsive table-striped" >
+    <thead>
+        <tr>
+            @foreach (DataColumn col in Model.Columns)
+            {
+                <th>@col.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (DataRow row in Model.Rows)
+        {
+            <tr>
+                @foreach (DataColumn col in Model.Columns)
+                {
+                    <td>@row[col.ColumnName]</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
 
-                </div>
+@Html.ActionLink("Create Memo","Create")
 
-                <div class="container-fluid">
-                    <label for="Pesos">Pesos</label>
-                    <input type="text" id="Pesos" class="form-control" disabled="disabled"> 
-                   
 
-                </div>
 
-                <div class="container-fluid">
-                    <label for="Reference">Reference</label>
-                    <input type="text" id="Reference" class="form-control" placeholder="Enter Reference: " />
 
-                </div>
-                 
-               
-                
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary" onclick="Insert()">Submit</button>
-            </div>
-        </div>
-    </div>
-</div>
 

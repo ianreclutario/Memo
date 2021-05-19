@@ -1,0 +1,153 @@
+﻿@model Memo.Models.Header
+
+
+
+<script src="~/Scripts/CRUD/crud.js"></script>
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+
+
+@using (Html.BeginForm("Create","Home", FormMethod.Post, new { enctype = "multipart/form-data", @id = "Create" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Header</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Type, new List<SelectListItem> { new SelectListItem { Text = "Credit", Value = "Credit" }, new SelectListItem { Text = "Debit", Value = "Debit" } }, "-Select-", new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.To, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.To, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.To, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.RNo, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RNo, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.RNo, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control", @type="date"} })
+                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Address, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Address, new { htmlAttributes = new { @class = "form-control"} })
+                @Html.ValidationMessageFor(model => model.Address, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Store, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Store, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Store, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="button" value="Create" class="btn btn-default" onclick="firstValidate()" @*data-toggle="modal" data-target="#showModal"*@ />
+
+                <div id="divalert" style="color:red" hidden="hidden">
+                    <p>Please enter complete details!!!!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="margin:5%">
+                    <div class="container-fluid">
+                        <input type="text" id="editor1" />
+                        <script>
+                            CKEDITOR.replace('editor1');
+                        </script>
+                    </div>
+                    <div class="container-fluid">
+                        <label for="Amount">Amount</label>
+                        <input type="number" id="Amount" class="form-control" oninput="convert()" />
+    
+                    </div>
+    
+                    <div class="container-fluid">
+                        <label for="Pesos">Pesos</label>
+                        <input type="text" id="Pesos" class="form-control" disabled="disabled">
+    
+    
+                    </div>
+    
+                    <div class="container-fluid">
+                        <label for="Reference">Reference</label>
+                        <input type="text" id="Reference" class="form-control" placeholder="Enter Reference: " />
+    
+                    </div>
+
+                    
+        
+    
+                </div>
+                <div class="modal-footer">
+                    <input type="button"  class="btn btn-primary" value="Submit" onclick="secondValidate()" @*data-toggle="modal" data-target="#modalCtrlNumber"*@/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    
+    <!-- Modal -->
+    <div class="modal fade" id="modalCtrlNumber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    -Display Control Number-
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">OK</button>
+                 
+                </div>
+            </div>
+        </div>
+    </div>
+
+

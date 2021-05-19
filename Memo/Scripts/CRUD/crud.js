@@ -1,9 +1,12 @@
-﻿function Insert()
+﻿
+
+
+function Insert()
 {
 
+    
     $.getScript("https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js", function () {
     });
-
     var h_type = $('#Type').val();
     var h_rno = $('#RNo').val();
     var h_to = $('#To').val();
@@ -26,7 +29,7 @@
         contentType: "application/json: charset=utf-8",
         data: JSON.stringify({ h_type: h_type, h_rno: h_rno, h_to: h_to, h_date: h_date, h_address: h_address, h_store: h_store, h_text: h_text, h_amount: h_amount, h_pesos: h_pesos, h_reference: h_reference}),
         success: function (json) {
-            alert('Successfully Saved');
+            alert("success!");
         },
         failure: function (errMsg) {
             alert(errMsg);
@@ -37,6 +40,33 @@
 
     
 }
+function firstValidate() {
+    if ($('#Type').val() == "-Select-" || $('#To').val().length === 0 || $('#RNo').val().length === 0 || $('#Date').val().length === 0 || $('#Address').val().length === 0 || $('#Store').val().length === 0) {
+        $('#divalert').css('display', 'block');
+        
+    }
+    else if (!($('#Type').val() == "-Select-" || !$('#To').val().length === 0 || !$('#RNo').val().length === 0 || !$('#Date').val().length === 0 || !$('#Address').val().length === 0 || !$('#Store').val().length === 0)) {
+        $('#divalert').css('display', 'none');
+        $('#showModal').modal('show');
+            
+    }
+}
+
+function secondValidate() {   
+    var textdata = CKEDITOR.instances.editor1.getData();
+    if ($('.modal').hasClass('in')) {
+        if ($('#Amount').val() == " ") {
+            alert("Please enter complete details!");
+        }
+      
+
+        else {
+
+            Insert();
+           }
+    }
+}
+        
 
 function convert() {
     var amount = $('#Amount').val();

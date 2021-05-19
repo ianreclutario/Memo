@@ -8,6 +8,7 @@ namespace Memo.Models
     public class Header
     {
         public int ID { get; set; }
+        public string RNo { get; set; }
         public string Type { get; set; }
         public string To { get; set; }
         public string Date { get; set; }
