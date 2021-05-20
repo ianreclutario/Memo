@@ -24,7 +24,8 @@
             <tr>
                 @foreach (DataColumn col in Model.Columns)
                 {
-                    <td>@row[col.ColumnName]</td>
+                    <td>@row[col.ColumnName] </td>
+                    <td> <a href="@Html.ActionLink("Edit","Header", new { @id = Model.Rows.[col.ColumnName][0]> })">Edit</td>
                 }
             </tr>
         }

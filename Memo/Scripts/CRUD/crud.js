@@ -7,10 +7,11 @@ function Insert()
     
     $.getScript("https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js", function () {
     });
-    var h_type = $('#Type').val();
     var h_rno = $('#RNo').val();
     var h_to = $('#To').val();
-    var h_date= $('#Date').val();
+    var h_date = $('#Date').val();
+    var h_type = $('#Type').val();
+    var encdate = new Date($.now());
     var h_address = $('#Address').val();
     var h_store = $('#Store').val();
     var h_text = CKEDITOR.instances.editor1.getData();
@@ -27,17 +28,30 @@ function Insert()
         url: "/Home/InsertFields/",
         datatype: "json",
         contentType: "application/json: charset=utf-8",
-        data: JSON.stringify({ h_type: h_type, h_rno: h_rno, h_to: h_to, h_date: h_date, h_address: h_address, h_store: h_store, h_text: h_text, h_amount: h_amount, h_pesos: h_pesos, h_reference: h_reference}),
+        data: JSON.stringify({
+            encdate: encdate,
+            h_type: h_type,
+            h_rno: h_rno,
+            h_to: h_to,
+            h_date: h_date,
+            h_address: h_address,
+            h_store: h_store,
+            h_text: h_text,
+            h_amount: h_amount,
+            h_pesos: h_pesos,
+            h_reference: h_reference
+        }),
+        
         success: function (json) {
             alert("success!");
         },
         failure: function (errMsg) {
             alert(errMsg);
         }
+        
     })
 
-
-
+    console.log(ss);
     
 }
 function firstValidate() {
