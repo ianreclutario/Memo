@@ -20,17 +20,18 @@ namespace Memo.Controllers
         
         public ActionResult Index()
         {
+            Header h = new Header();
             DataTable dtbl = new DataTable();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 con.Open();
                 string query = "select * from header";
-                SqlDataAdapter da = new SqlDataAdapter(query, con);
-                da.Fill(dtbl);
+                
+                
 
 
             }
-                return View(dtbl);
+            return View(h);
         }
 
         public ActionResult Create(string Type, string RNo, string To, string Date, string Address, string Store)

@@ -1,4 +1,4 @@
-﻿@model System.Data.DataTable
+﻿@using Memo.Models;
 @using System.Data;
 
 @{
@@ -11,28 +11,33 @@
 
 <table class="table table-responsive table-striped" >
     <thead>
-        <tr>
-            @foreach (DataColumn col in Model.Columns)
-            {
-                <th>@col.ColumnName</th>
-            }
-        </tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
+        <tr>RNo</tr>
     </thead>
     <tbody>
-        @foreach (DataRow row in Model.Rows)
+        @foreach (var d in Model)
         {
             <tr>
-                @foreach (DataColumn col in Model.Columns)
-                {
-                    <td>@row[col.ColumnName] </td>
-                    <td> <a href="@Html.ActionLink("Edit","Header", new { @id = Model.Rows.[col.ColumnName][0]> })">Edit</td>
-                }
+                <td>@d.EmployeeId</td>
+                <td>@d.FirstName</td>
+                <td>@d.LastName</td>
+                <td>@d.Email</td>
+                <td>@d.Salary</td>
+                <td>@d.Company</td>
+                <td>@d.Dept</td>
+
             </tr>
-        }
+        }  
     </tbody>
 </table>
 
-@Html.ActionLink("Create Memo","Create")
+
 
 
 
