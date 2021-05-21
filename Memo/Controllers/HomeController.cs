@@ -24,14 +24,17 @@ namespace Memo.Controllers
             DataTable dtbl = new DataTable();
             using (SqlConnection con = new SqlConnection(connectionString))
             {
+                
                 con.Open();
                 string query = "select * from header";
-                
+
+                SqlDataAdapter da = new SqlDataAdapter(query, con);
+                da.Fill(dtbl);
                 
 
 
             }
-            return View(h);
+            return View(dtbl);
         }
 
         public ActionResult Create(string Type, string RNo, string To, string Date, string Address, string Store)
@@ -53,11 +56,14 @@ namespace Memo.Controllers
             DataTable dtbl = new DataTable(); 
             using(SqlConnection con = new SqlConnection(connectionString))
             {
-                string query = "select * from header";
+                con.Open();
+                string query = "select * from header where ID = @ID";
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
+                da.SelectCommand.Parameters.AddWithValue("@ID", id);
                 da.Fill(dtbl);
             }
-            if(dtbl.Rows.Count == 1)
+
+            if( dtbl.Rows.Count == 1)
             {
                 h.ID = Convert.ToInt32(dtbl.Rows[0][0].ToString());
                 h.Type = dtbl.Rows[0][1].ToString();
@@ -66,12 +72,16 @@ namespace Memo.Controllers
                 h.Date = dtbl.Rows[0][5].ToString();
                 h.Address = dtbl.Rows[0][6].ToString();
                 h.Store = dtbl.Rows[0][7].ToString();
+                h.Text = dtbl.Rows[0][8].ToString();
+                h.Amount = dtbl.Rows[0][9].ToString();
+                h.Reference = dtbl.Rows[0][11].ToString();
                 return View(h);
 
             }
             else
             {
-                return RedirectToAction("Index");
+                return Content("HATDOG");
+                //return RedirectToAction("Index");
             }
            
         }
@@ -82,9 +92,9 @@ namespace Memo.Controllers
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 con.Open();
-                string query = @"update header set H_TYPE = @h_type, H_TO = @h_to, H_RNO = @h_rno, H_DATE = @h_date, H_ADDRESS = @h_address, H_STORE = @h_store";
+                string query = @"update header set H_TYPE = @h_type, H_TO = @h_to, H_RNO = @h_rno, H_DATE = @h_date, H_ADDRESS = @h_address, H_STORE = @h_store where ID = @ID";
                 SqlCommand cmd = new SqlCommand(query,con);
-                
+                cmd.Parameters.AddWithValue("@ID", h.ID);
                 cmd.Parameters.AddWithValue("@h_type", h.Type);
                 cmd.Parameters.AddWithValue("@h_to", h.To);
                 cmd.Parameters.AddWithValue("@h_rno", h.RNo);
@@ -93,7 +103,7 @@ namespace Memo.Controllers
                 cmd.Parameters.AddWithValue("@h_store", h.Store);
 
                 cmd.ExecuteNonQuery();
-               
+                con.Close();
                 
 
             }
@@ -152,5 +162,47 @@ namespace Memo.Controllers
                 return Json("failure", JsonRequestBehavior.AllowGet);
             }
         }
+
+        public JsonResult getModalData(string id)
+        {
+
+            try
+            {
+                Header h = new Header();
+                DataTable dtbl = new DataTable();
+                using (SqlConnection con = new SqlConnection(connectionString))
+                {
+                    string query = "select [H_TEXT], [H_AMOUNT], [H_PESOS], [H_REFERENCE] from Header where [ID] = @ID";
+                    SqlCommand cmd = new SqlCommand(query, con);
+                    cmd.Parameters.AddWithValue("@ID", h.ID);
+                    SqlDataAdapter da = new SqlDataAdapter(query, con);
+                    da.Fill(dtbl);
+
+
+                    string[] htmlValues = new string[dtbl.Columns.Count];
+
+                    if(dtbl.Rows.Count > 0)
+                    {
+                        for (int i = 0; i < dtbl.Columns.Count; i++)
+                        {
+                            htmlValues[i] += dtbl.Rows[0].ItemArray[i].ToString();
+                        }
+                    }
+                  
+                    con.Close();
+
+                    return Json(new { htmlValues }, JsonRequestBehavior.AllowGet);
+                }
+
+            }
+
+
+            catch (Exception e)
+            {
+                return Json("failure", JsonRequestBehavior.AllowGet);
+            }
+
+        }
     }
+
 }

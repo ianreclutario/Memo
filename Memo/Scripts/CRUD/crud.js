@@ -18,7 +18,7 @@ function Insert()
     var h_amount = $('#Amount').val();
     var h_pesos = $('#Pesos').val();
     var h_reference = $('#Reference').val();
- 
+    
 
 
 
@@ -44,6 +44,7 @@ function Insert()
         
         success: function (json) {
             alert("success!");
+          
         },
         failure: function (errMsg) {
             alert(errMsg);
@@ -51,9 +52,18 @@ function Insert()
         
     })
 
-    console.log(ss);
+    
     
 }
+
+//$(document).ready(function () {
+//    $('#Amount').on('input', function (e) {
+//        convert();
+//    });
+//});
+
+
+
 function firstValidate() {
     if ($('#Type').val() == "-Select-" || $('#To').val().length === 0 || $('#RNo').val().length === 0 || $('#Date').val().length === 0 || $('#Address').val().length === 0 || $('#Store').val().length === 0) {
         $('#divalert').css('display', 'block');
@@ -77,6 +87,7 @@ function secondValidate() {
         else {
 
             Insert();
+
            }
     }
 }
@@ -86,6 +97,17 @@ function convert() {
     var amount = $('#Amount').val();
     $('#Pesos').val(numberToWords(amount));
 }
+
+
+
+
+
+
+
+
+
+
+
 
 function numberToWords(number) {
     var digit = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];

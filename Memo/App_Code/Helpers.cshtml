@@ -1,0 +1,9 @@
+﻿@using System.Web.Mvc;
+<script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
+
+@helper MyLittleJsCode(string jsString)
+{
+    <script type="text/javascript">
+        CKEDITOR.replace("editor2");
+    </script>
+}

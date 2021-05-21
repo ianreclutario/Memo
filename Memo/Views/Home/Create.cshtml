@@ -65,7 +65,7 @@
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="button" value="Create" class="btn btn-default" onclick="firstValidate()" @*data-toggle="modal" data-target="#showModal"*@ />
+                <input type="button" value="Create" class="btn btn-default" onclick="firstValidate()" />
 
                 <div id="divalert" style="color:red" hidden="hidden">
                     <p>Please enter complete details!!!!</p>
@@ -121,7 +121,8 @@
     
                 </div>
                 <div class="modal-footer">
-                    <input type="button"  class="btn btn-primary" value="Submit" onclick="secondValidate()" @*data-toggle="modal" data-target="#modalCtrlNumber"*@/>
+                    <input type="button"  class="btn btn-primary" value="Submit" onclick="@("window.location.href='" + @Url.Action("Index", "Home") + "'");"'/>
+                    
                 </div>
             </div>
         </div>
