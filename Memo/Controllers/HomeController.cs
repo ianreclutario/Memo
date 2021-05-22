@@ -79,9 +79,8 @@ namespace Memo.Controllers
 
             }
             else
-            {
-                return Content("HATDOG");
-                //return RedirectToAction("Index");
+            { 
+                return RedirectToAction("Index");
             }
            
         }
@@ -162,36 +161,43 @@ namespace Memo.Controllers
                 return Json("failure", JsonRequestBehavior.AllowGet);
             }
         }
-
-        public JsonResult getModalData(string id)
+        [WebMethod]
+        public JsonResult EditFields(string id, string h_type, string h_rno, string h_to, string h_date, string h_address, string h_store, string h_text, string h_amount, string h_pesos, string h_reference)
         {
-
             try
-            {
-                Header h = new Header();
-                DataTable dtbl = new DataTable();
+            {               
                 using (SqlConnection con = new SqlConnection(connectionString))
                 {
-                    string query = "select [H_TEXT], [H_AMOUNT], [H_PESOS], [H_REFERENCE] from Header where [ID] = @ID";
+                    con.Open();
+                    string query = @"update header set         
+                        [H_TYPE] = @h_type
+                        ,[H_RNO] = @h_rno
+                        ,[H_TO] = @h_to
+                        ,[H_DATE] = @h_date
+                        ,[H_ADDRESS] = @h_address
+                        ,[H_STORE] = @h_store
+                        ,[H_TEXT] =  @h_text
+                        ,[H_AMOUNT] = @h_amount
+                        ,[H_PESOS] = @h_pesos
+                        ,[H_REFERENCE] = @h_reference
+                        where ID = @ID";
                     SqlCommand cmd = new SqlCommand(query, con);
-                    cmd.Parameters.AddWithValue("@ID", h.ID);
-                    SqlDataAdapter da = new SqlDataAdapter(query, con);
-                    da.Fill(dtbl);
+                    cmd.Parameters.AddWithValue("@ID", id);    
+                    cmd.Parameters.AddWithValue("@h_type", h_type);
+                    cmd.Parameters.AddWithValue("@h_rno", h_rno);
+                    cmd.Parameters.AddWithValue("@h_to", h_to);
+                    cmd.Parameters.AddWithValue("@h_date", h_date);
+                    cmd.Parameters.AddWithValue("@h_address", h_address);
+                    cmd.Parameters.AddWithValue("@h_store", h_store);
+                    cmd.Parameters.AddWithValue("@h_text", h_text);
+                    cmd.Parameters.AddWithValue("@h_amount", h_amount);
+                    cmd.Parameters.AddWithValue("@h_pesos", h_pesos);
+                    cmd.Parameters.AddWithValue("@h_reference", h_reference);
 
-
-                    string[] htmlValues = new string[dtbl.Columns.Count];
-
-                    if(dtbl.Rows.Count > 0)
-                    {
-                        for (int i = 0; i < dtbl.Columns.Count; i++)
-                        {
-                            htmlValues[i] += dtbl.Rows[0].ItemArray[i].ToString();
-                        }
-                    }
-                  
+                    cmd.ExecuteNonQuery();
                     con.Close();
-
-                    return Json(new { htmlValues }, JsonRequestBehavior.AllowGet);
+                   
+                    return Json("success", JsonRequestBehavior.AllowGet);
                 }
 
             }

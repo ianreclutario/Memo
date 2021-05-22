@@ -4,7 +4,7 @@
     ViewBag.Title = "Edit";
 }
 
-
+<script src="http://localhost:8273/Scripts/crud.js"></script>
 <h2>Edit</h2>
 
 @using (Html.BeginForm())
@@ -16,7 +16,7 @@
             <h4>Header</h4>
             <hr />
             @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-            @Html.HiddenFor(model => model.ID)
+            @Html.HiddenFor(model => model.ID, new {@id = "id", @hidden = "hidden"})
 
             <div class="form-group">
                 @Html.LabelFor(model => model.RNo, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -76,7 +76,7 @@
 
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })
+            @*@Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label col-md-2" })*@
             <div class="col-md-10">
                 @Html.TextAreaFor(model => model.Text, new { @id = "editor2", @class = "form-control", @rows = "200" })
                 @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
@@ -100,6 +100,9 @@
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Pesos, new { @id = "Pesos", htmlAttributes = new { @class = "form-control", @disabled = "disabled" }})
                 @Html.ValidationMessageFor(model => model.Pesos, "", new { @class = "text-danger" })
+                <script>
+
+                </script>
             </div>
         </div>
 
@@ -122,7 +125,7 @@
 
 <div class="form-group">
     <div class="col-md-offset-4 col-md-10">
-        <input type="submit" value="Save" class="btn btn-default" />
+        <input type="button" value="Save" onclick="Edit(); @("window.location.href='" + @Url.Action("Index", "Home") + "'");"" class="btn btn-default" />
     </div>
 </div>
 

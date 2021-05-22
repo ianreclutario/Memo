@@ -7,6 +7,7 @@ function Insert()
     
     $.getScript("https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js", function () {
     });
+   
     var h_rno = $('#RNo').val();
     var h_to = $('#To').val();
     var h_date = $('#Date').val();
@@ -43,7 +44,7 @@ function Insert()
         }),
         
         success: function (json) {
-            alert("success!");
+            window.location.href("Home/")
           
         },
         failure: function (errMsg) {
@@ -56,11 +57,78 @@ function Insert()
     
 }
 
-//$(document).ready(function () {
-//    $('#Amount').on('input', function (e) {
-//        convert();
-//    });
-//});
+
+function Edit() {
+    $.getScript("https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js", function () {
+    });
+    var id = $('#id').val();
+    var h_rno = $('#RNo').val();
+    var h_to = $('#To').val();
+    var h_date = $('#Date').val();
+    var h_type = $('#Type').val();
+    var encdate = new Date($.now());
+    var h_address = $('#Address').val();
+    var h_store = $('#Store').val();
+    var h_text = CKEDITOR.instances.editor2.getData();
+    var h_amount = $('#Amount').val();
+    var h_pesos = $('#Pesos').val();
+    var h_reference = $('#Reference').val();
+
+    console.log(JSON.stringify({
+        id: id,
+        h_type: h_type,
+        h_rno: h_rno,
+        h_to: h_to,
+        h_date: h_date,
+        h_address: h_address,
+        h_store: h_store,
+        h_text: h_text,
+        h_amount: h_amount,
+        h_pesos: h_pesos,
+        h_reference: h_reference
+    }));
+
+
+    $.ajax({
+        type: "POST",
+        url: "/Home/EditFields/",
+        datatype: "json",
+        contentType: "application/json: charset=utf-8",
+        data: JSON.stringify({
+            id:id,    
+            h_type: h_type,
+            h_rno: h_rno,
+            h_to: h_to,
+            h_date: h_date,
+            h_address: h_address,
+            h_store: h_store,
+            h_text: h_text,
+            h_amount: h_amount,
+            h_pesos: h_pesos,
+            h_reference: h_reference
+        }),
+
+        success: function (json) {
+            window.location.href("Home/")
+
+
+        },
+        failure: function (errMsg) {
+            alert(errMsg);
+        }
+
+    })
+
+
+
+
+}
+
+$(document).ready(function () {
+    $('#Amount').on('input', function (e) {
+        convert();
+    });
+});
 
 
 
@@ -97,17 +165,6 @@ function convert() {
     var amount = $('#Amount').val();
     $('#Pesos').val(numberToWords(amount));
 }
-
-
-
-
-
-
-
-
-
-
-
 
 function numberToWords(number) {
     var digit = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
