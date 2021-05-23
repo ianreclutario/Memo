@@ -37,15 +37,13 @@ namespace Memo.Controllers
             return View(dtbl);
         }
 
-        public ActionResult Create(string Type, string RNo, string To, string Date, string Address, string Store)
+        public ActionResult Create(Header h )
         {
-            Header h = new Header();
-            Type = h.Type;
-            RNo = h.To;
-            Date = h.Date;
-            Address = h.Address;
-            Store = h.Store;
-            Type = h.Type;
+            h.Name = "Ian Rex Clutario";
+            h.Department = "MISD";
+         
+
+            
 
 
             return View(h);
