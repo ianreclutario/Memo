@@ -2,7 +2,7 @@
 
 
 
-<script src="~/Scripts/CRUD/crud.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.16.0/standard/ckeditor.js"></script>
 
 
@@ -70,18 +70,100 @@
                 <div id="divalert" style="color:red" hidden="hidden">
                     <p>Please enter complete details!!!!</p>
                 </div>
+
+               
+
             </div>
         </div>
+    </div>
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+         Add Item
+        </div>
+        <div class="panel-body">
+            <input type="button" class="btn btn-primary" id="AddHeader" value="Add Header" onclick="$('#modalAddHeader').modal('show');" />
+           <div class="container" hidden="hidden">
+               <p>Please enter items!</p>
+           </div>
+           
+        </div>
+
     </div>
 }
 
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
-
+        
+       
 
     <!-- Modal -->
-    <div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+
+<div class="modal fade" id="modalAddHeader" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Header</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                  <label class="control-label col-md-2">Header</label>
+                  <textarea rows="10" id="HText" class="form-control" placeholder="Enter headers here"></textarea>
+
+              </div>
+                <div class="form-group">
+                    @*<label class="control-label col-md-2">Rows</label>
+                    <input type="number" id="HRow" class="form-control"/>*@
+                    <ol ID="boxes"></ol>
+                    <input type="button" value="Add a Row" id="add_boxes" />
+
+                </div>
+            </div>
+            <div class="modal-footer">
+            @*<button type="button" class="btn btn-primary" onclick="InsertDetail(true)">Add Header</button>*@
+            <button type="button" class="btn btn-primary" onblur="GetHeaders()">Add Header</button>
+        </div>
+    </div>
+ </div>
+</div>
+
+
+
+<div class="modal fade" id="modalAddRows" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Add Rows</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="divtbl0" class="form-group">
+                    
+
+                </div>
+              
+                
+                
+            </div>
+            <div class="modal-footer">
+                @*<button type="button" class="btn btn-primary" onclick="InsertDetail(true)">Add Header</button>*@
+                <button type="button" class="btn btn-primary" onclick="AddRows()">Add Memo</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -92,10 +174,18 @@
                 </div>
                 <div class="modal-body" style="margin:5%">
                     <div class="container-fluid">
-                        <input type="text" id="editor1" />
-                        <script>
-                            CKEDITOR.replace('editor1');
-                        </script>
+                        @*<input type="text" id="editor1" />*@
+                        <input type="button" id="addRow" value="Add Row"/>
+                        <div class="panel panel-default panel-primary">
+                            <div class="panel-heading">
+                                Insert Item
+                            </div>
+                                <div class="panel-body">
+                                    <div id="rows">
+                                    </div>
+                                </div>
+                        </div>
+                     
                     </div>
                     <div class="container-fluid">
                         <label for="Amount">Amount</label>
@@ -130,7 +220,7 @@
 
 
     
-    <!-- Modal -->
+   
     <div class="modal fade" id="modalCtrlNumber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -152,3 +242,114 @@
     </div>
 
 
+@section scripts{
+@Scripts.Render("~/bundles/jqueryval")
+    
+    
+    <script>
+        var headers = $('#HText').val().split(/\n/);
+        var headerlength = headers.length;
+        var add = $('#add_boxes');
+        var box = $('#boxes');
+        var amountOfInputs = headerlength;
+        console.log(amountOfInputs);
+        var max = 10;
+
+        //limit
+        add.click(function (event) {
+            alert("nagana");
+            if ($(".box").length >= max) {
+                alert("Max Row!");
+                return;
+            }
+
+            var listItem = $('<li class="box"> </li>');
+            for (var i = 0; i < amountOfInputs; i++) {
+                listItem.append('<input type="text" class="input" />');
+            }
+            listItem.append('<input type="text" class="output" name="value" />');
+            // Lets add a link to remove this group as well, with a removeGroup class
+            listItem.append('<input type="button" value="Remove" class="removeGroup" />')
+            listItem.appendTo(box);
+        });
+
+        $(document).on("keyup", "input.input", function (event) {
+            // Get the group
+            var group = $(this).parent();
+            // Get the children (all that arent the .output input)
+            var children = group.children("input:not(.output)");
+            // Get the input where you want to print the output
+            var output = group.children(".output");
+            // Set a value
+            var value = 0;
+            // Here we will run through every input and add its value
+            children.each(function () {
+                // Add the value of every box. If parseInt fails, add 0.
+                value += parseInt(this.value) || 0;
+            });
+            // Print the output value
+            output.val(value);
+        });
+
+        // Lets implement your remove field option by removing the groups parent div on click
+        $(document).on("click", ".removeGroup", function (event) {
+            event.preventDefault();
+            $(this).parent(".box").remove();
+        });
+
+
+        $('#modalAddRows').modal('show');
+
+        function GetHeaders() {
+            
+            var headers = $('#HText').val().split(/\n/);
+            var headerlength = headers.length;
+            //console.log(headerlength);
+            var headertxt = []
+            for (var i = 0; i < headers.length; i++) {
+                if (/\S/.test(headers[i])) {
+                    headertxt.push($.trim(headers[i]));
+                }
+            }
+            AddRows(headerlength, headertxt);
+            alert(JSON.stringify(headertxt));
+        }
+
+        function AddRows(headerlength, headertxt) {
+            console.log(JSON.stringify(headertxt));
+            var table = " ";
+            var column = headerlength;          
+            var rows = $('#HRow').val();
+            //console.log(rows);
+            //console.log(column);
+            table += '<tr>';
+
+            for (var j = 0; j < column; j++) {
+                table += '<th>' + headertxt[j] + '</th>'
+              
+            }
+            
+
+            table += '</tr>';
+           
+            $('#divtbl0').append('<table style= "width:100%; height:100%;">' +table +'</table>');
+            
+
+            //alert(JSON.stringify(headertxt));
+        }
+
+        //dito
+       
+       
+        function InsertDetail(Header) {
+
+           
+
+            $('#rows').append(` `)
+        }
+
+        //$(document).ready(function () {
+        //    alert("section scripts nagana");
+        //});
+    </script>
+    }

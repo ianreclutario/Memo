@@ -8,7 +8,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Web.Services;
 using Memo.Models;
-
+using PagedList;
 namespace Memo.Controllers
 {
    
@@ -18,10 +18,11 @@ namespace Memo.Controllers
         string connectionString = ConfigurationManager.ConnectionStrings["DBConnection"].ConnectionString;
         [HttpGet]
         
-        public ActionResult Index()
+        public ActionResult Index(string search, int? page)
         {
             Header h = new Header();
             DataTable dtbl = new DataTable();
+           
             using (SqlConnection con = new SqlConnection(connectionString))
             {
                 
@@ -29,6 +30,7 @@ namespace Memo.Controllers
                 string query = "select * from header";
 
                 SqlDataAdapter da = new SqlDataAdapter(query, con);
+
                 da.Fill(dtbl);
                 
 
