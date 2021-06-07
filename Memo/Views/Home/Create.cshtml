@@ -100,7 +100,7 @@
 
     <!-- Modal -->
 
-<div class="modal fade" id="modalAddHeader" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="modalAddHeader" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -112,20 +112,23 @@
             <div class="modal-body">
               <div class="form-group">
                   <label class="control-label col-md-2">Header</label>
-                  <textarea rows="10" id="HText" class="form-control" placeholder="Enter headers here"></textarea>
+                  <textarea rows="10" id="HText" class="form-control" @*onblur="GetHeaders()"*@ placeholder="Enter headers here"></textarea>
 
               </div>
                 <div class="form-group">
                     @*<label class="control-label col-md-2">Rows</label>
                     <input type="number" id="HRow" class="form-control"/>*@
-                    <ol ID="boxes"></ol>
-                    <input type="button" value="Add a Row" id="add_boxes" />
-
+                    @*<ol ID="boxes"></ol>
+                    <input type="button" value="Add a Row" id="add_boxes" />*@
+                   
+                </div>
+                <div class="form-group">
+                    <input type="number" id="rowtxt" class="form-control" placeholder="Enter how many rows: " />
                 </div>
             </div>
             <div class="modal-footer">
             @*<button type="button" class="btn btn-primary" onclick="InsertDetail(true)">Add Header</button>*@
-            <button type="button" class="btn btn-primary" onblur="GetHeaders()">Add Header</button>
+            <button type="button" class="btn btn-primary" onclick="GetHeaders()">Add Header</button>
         </div>
     </div>
  </div>
@@ -133,11 +136,14 @@
 
 
 
-<div class="modal fade" id="modalAddRows" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+<div class="modal fade bd-example-modal-lg" id="modalAddRows" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Add Rows</h5>
+                <h5 class="modal-title" id="exampleModalLabel">
+                    Add Rows
+                    <input type="button" class="btn btn-primary" value="New"/>
+                </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -153,7 +159,7 @@
             </div>
             <div class="modal-footer">
                 @*<button type="button" class="btn btn-primary" onclick="InsertDetail(true)">Add Header</button>*@
-                <button type="button" class="btn btn-primary" onclick="AddRows()">Add Memo</button>
+                <button type="button" class="btn btn-primary" onclick="$('#innerModal').modal('show');">Add Memo</button>
             </div>
         </div>
     </div>
@@ -163,7 +169,7 @@
 
 
 
-<div class="modal fade" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade bd-example-modal-lg" id="showModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -219,7 +225,30 @@
     </div>
 
 
-    
+    <div class="modal fade bd-example-modal-lg" id="innerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" style="margin:5%">
+                 <div id ="divtbl1">
+                    <label for="divtbl1">
+
+                    </label>
+                 </div>
+                    </div>
+
+ 
+            </div>
+            <div class="modal-footer">
+            <button type="button" >Add Header</button>
+            </div>
+        </div>
+    </div>
    
     <div class="modal fade" id="modalCtrlNumber" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
@@ -245,64 +274,15 @@
 @section scripts{
 @Scripts.Render("~/bundles/jqueryval")
     
-    
     <script>
-        var headers = $('#HText').val().split(/\n/);
-        var headerlength = headers.length;
-        var add = $('#add_boxes');
-        var box = $('#boxes');
-        var amountOfInputs = headerlength;
-        console.log(amountOfInputs);
-        var max = 10;
-
-        //limit
-        add.click(function (event) {
-            alert("nagana");
-            if ($(".box").length >= max) {
-                alert("Max Row!");
-                return;
-            }
-
-            var listItem = $('<li class="box"> </li>');
-            for (var i = 0; i < amountOfInputs; i++) {
-                listItem.append('<input type="text" class="input" />');
-            }
-            listItem.append('<input type="text" class="output" name="value" />');
-            // Lets add a link to remove this group as well, with a removeGroup class
-            listItem.append('<input type="button" value="Remove" class="removeGroup" />')
-            listItem.appendTo(box);
-        });
-
-        $(document).on("keyup", "input.input", function (event) {
-            // Get the group
-            var group = $(this).parent();
-            // Get the children (all that arent the .output input)
-            var children = group.children("input:not(.output)");
-            // Get the input where you want to print the output
-            var output = group.children(".output");
-            // Set a value
-            var value = 0;
-            // Here we will run through every input and add its value
-            children.each(function () {
-                // Add the value of every box. If parseInt fails, add 0.
-                value += parseInt(this.value) || 0;
-            });
-            // Print the output value
-            output.val(value);
-        });
-
-        // Lets implement your remove field option by removing the groups parent div on click
-        $(document).on("click", ".removeGroup", function (event) {
-            event.preventDefault();
-            $(this).parent(".box").remove();
-        });
-
-
-        $('#modalAddRows').modal('show');
-
+        
         function GetHeaders() {
-            
+
+            var rownumber = $('#rowtxt').val();
             var headers = $('#HText').val().split(/\n/);
+            console.log("pumasok sa getheaders!");
+            //if (headers === '') {
+            console.log("header is null!");
             var headerlength = headers.length;
             //console.log(headerlength);
             var headertxt = []
@@ -312,30 +292,115 @@
                 }
             }
             AddRows(headerlength, headertxt);
-            alert(JSON.stringify(headertxt));
-        }
+            alert(JSON.stringify(headertxt.length));
 
-        function AddRows(headerlength, headertxt) {
-            console.log(JSON.stringify(headertxt));
-            var table = " ";
-            var column = headerlength;          
-            var rows = $('#HRow').val();
-            //console.log(rows);
-            //console.log(column);
-            table += '<tr>';
+            var add = $('#add_boxes');
+            var box = $('#boxes');
+            var max = 10;
 
-            for (var j = 0; j < column; j++) {
-                table += '<th>' + headertxt[j] + '</th>'
-              
+            //limit
+
+            add.click(function (event) {
+                alert("nagana");
+                if ($(".box").length >= max) {
+                    alert("Max Row!");
+                    return;
+                }
+
+                var listItem = $('<li class="box"> </li>');
+                for (var i = 0; i < headertxt.length - 1; i++) {
+                    listItem.append('<input type="text" class="inputtxt" />');
+                }
+
+                listItem.append('<input type="text" class="output" name="value" />');
+                // Lets add a link to remove this group as well, with a removeGroup class
+                listItem.append('<input type="button" value="Remove" class="removeGroup" />')
+                listItem.appendTo(box);
+            });
+
+            $(document).on("keyup", "input.inputtxt", function (event) {
+                // Get the group
+                var group = $(this).parent();
+                // Get the children (all that arent the .output input)
+                var children = group.children("input:not(.output)");
+                // Get the input where you want to print the output
+                var output = group.children(".output");
+                // Set a value
+                var value = 0;
+                // Here we will run through every input and add its value
+                children.each(function () {
+                    // Add the value of every box. If parseInt fails, add 0.
+                    value += parseInt(this.value) || 0;
+                });
+                // Print the output value
+                output.val(value);
+            });
+
+            // Lets implement your remove field option by removing the groups parent div on click
+            $(document).on("click", ".removeGroup", function (event) {
+                event.preventDefault();
+                $(this).parent(".box").remove();
+            });
+
+
+            $('#modalAddRows').modal('show');
+            var id = "input" + $(this).attr("id").replace("field", "");
+            var label = $("<label for=\"" + id + "\">" + $(this).find("input.fieldname").first().val() + "</label>");
+            for (var i = 0; i < rownumber; i++) {
+               
+                for (var i = 0; i < headerlength; i++) {
+                    //console.log(rownumber);
+                    
+                    $('#divtbl1').append('<table><tr><td><input type="text" class="addrowsinput" /></td></tr></table>');
+                    $('label[for=]').text(headertxt[i]);
+                    console.log(headertxt[i]);
+                }
+               
+
             }
-            
-
-            table += '</tr>';
            
-            $('#divtbl0').append('<table style= "width:100%; height:100%;">' +table +'</table>');
-            
+        }
+          
+         
+        //}
+        function AddRows(headerlength, headertxt) {
 
-            //alert(JSON.stringify(headertxt));
+            var something = (function () {
+                var executed = false;
+                return function () {
+                    if (!executed) {
+                        executed = true;
+                        // do something
+                        var table = " ";
+                        var column = headerlength;
+                        var rows = $('#HRow').val();
+
+                        table += '<tr>';
+
+                        for (var j = 0; j < column; j++) {
+                            table += '<th>' + headertxt[j] + '</th>'
+                            
+                            console.log(j);
+                        }
+
+
+                        table += '</tr>';
+
+                        $('#divtbl0').append('<table style= "width:100%; height:100%;">' + table + '</table>');
+                        
+
+                    }
+                };
+            })();
+
+            something();
+         
+        }
+        function GetRowValue(headertxt) {
+            var headertxt;
+            var inputs = $('.inputtxt').map(function () { return this.value }).get();
+            alert(inputs);
+            alert(headertxt);
         }
 
         //dito
@@ -346,6 +411,11 @@
            
 
             $('#rows').append(` `)
+        }
+
+        function Inner(headerlength, headertxt) {
+            
+         
         }
 
         //$(document).ready(function () {
